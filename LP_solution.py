@@ -34,7 +34,7 @@ def pulp_sol(goods, money, coupon, limit_buy):
         variables.append(pulp.LpVariable(f'x{i}', lowBound=0, upBound=limit_buy, cat="Integer"))  
         target_coefficients.append(1)   # 目标函数的系数
         price_coefficients.append(goods.get("price")) # 限制条件1的系数
-        coupon_coefficients.append(goods.get("wholesaleCoupon"))  #限制条件2的系数
+        coupon_coefficients.append(goods.get("coupon"))  #限制条件2的系数
         i += 1
 
     # 设定目标场景，最大化目标还是最小化目标
@@ -70,7 +70,7 @@ def scipy_sol(goods, money, coupon, limit_buy):
         variables.append(var_n) 
         target_coefficients.append(-1)   # scipy库默认为最小化函数，所以要取反
         price_coefficients.append(goods.get("price")) # 不等式限制条件默认<=，所以这里系数不用取反
-        coupon_coefficients.append(goods.get("wholesaleCoupon"))
+        coupon_coefficients.append(goods.get("coupon"))
 
     c = np.array(target_coefficients)
     A_ub = np.array([price_coefficients, coupon_coefficients])
@@ -193,11 +193,11 @@ def integer_solve(res, A_ub, B_ub, c, variables):
 
 
 if __name__ == "__main__":
-    goods_json = readfile("20200605 copy.json")
+    goods_json = readfile("test.json")
     goods_list = json.loads(goods_json)
     print(len(goods_list))
     
-    limit_buy = 5    # 假设每个商品只能买3件
+    limit_buy = 5    # 假设每个商品只能买5件
     total_money = 200000
     total_coupon = 10000
     # rhs = [total_money, total_coupon]
